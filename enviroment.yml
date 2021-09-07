@@ -1,9 +1,0 @@
-name: datagame
-channels:
-  - conda-forge
-  - https://conda.anaconda.org/conda-forge/
-  - defaults
-dependencies:
-  - streamlit
-  - numpy
-  - matplotlib
