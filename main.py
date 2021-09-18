@@ -63,9 +63,9 @@ distribution_key = st.radio(
 n_samples = st.slider(
     'Select the number of samples:',
     min_value=100,
-    max_value=1000,
+    max_value=10000,
     value=100,
-    step=10
+    step=100
 )
 
 # sample distribution
