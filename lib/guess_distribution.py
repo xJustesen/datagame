@@ -1,17 +1,17 @@
-import streamlit as st
-import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm
+import numpy as np
+import streamlit as st
 from scipy.special import gamma
+from scipy.stats import norm
 
 
 def guess_distribution():
     DISTRIBUTIONS = {
-        1: ('normal', lambda x: np.random.normal(0, 0.1, x)),
-        2: ('Lorentz', np.random.standard_cauchy),
-        3: ('power', lambda x: np.random.power(5, x)),
-        4: ('uniform', lambda x: np.random.uniform(0, 5, x)),
-        5: ('gamma', lambda x: np.random.gamma(2, 2, x))
+        1: ("normal", lambda x: np.random.normal(0, 0.1, x)),
+        2: ("Lorentz", np.random.standard_cauchy),
+        3: ("power", lambda x: np.random.power(5, x)),
+        4: ("uniform", lambda x: np.random.uniform(0, 5, x)),
+        5: ("gamma", lambda x: np.random.gamma(2, 2, x)),
     }
 
     np.random.seed(314)
@@ -22,7 +22,6 @@ def guess_distribution():
         if key == 2:  # limit samples for better plotting
             samples = samples[(samples > -25) & (samples < 25)]
         return samples
-
 
     def get_pdf(key, x):
         if key == 1:
@@ -35,10 +34,9 @@ def guess_distribution():
         elif key == 4:
             return [0.20] * len(x)
         elif key == 5:
-            return x*np.exp(-x/2)/(4*gamma(2))
+            return x * np.exp(-x / 2) / (4 * gamma(2))
         else:
             raise NotImplementedError
-
 
     def plot_distribution(samples, plot_pdf):
         fig, ax = plt.subplots()
@@ -48,7 +46,7 @@ def guess_distribution():
         return fig
 
     st.sidebar.markdown(
-        '''
+        """
             The objective of this game is to guess which distribution is shown.
             You can increase the number of samples drawn from the distribution
             to increase your chances! 
@@ -59,27 +57,27 @@ def guess_distribution():
             enter to submit it. 
             
             Have fun!
-        '''
+        """
     )
-    st.title('Guess the Distribution!')
+    st.title("Guess the Distribution!")
 
     # set input parameters
     # make radio buttons appear horizontal and centered on the page
     st.write(
-        '<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center}</style>',
-        unsafe_allow_html=True
+        "<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center}</style>",
+        unsafe_allow_html=True,
     )
     distribution_key = st.radio(
-        label='Select one of the five secret distributions:',
+        label="Select one of the five secret distributions:",
         options=DISTRIBUTIONS.keys(),
         index=0,
     )
     n_samples = st.slider(
-        'Select the number of samples:',
+        "Select the number of samples:",
         min_value=100,
         max_value=10000,
         value=100,
-        step=100
+        step=100,
     )
 
     # sample distribution
@@ -87,16 +85,22 @@ def guess_distribution():
     _samples = get_samples(_sampler, n_samples, distribution_key)
 
     # get guess and determine if it is correct or not
-    guess = st.text_input('Input the name of the distribution you think it is:', value="").strip()
+    guess = st.text_input(
+        "Input the name of the distribution you think it is:", value=""
+    ).strip()
     if guess.lower() == name.lower():
         reveal = True
-        st.write(f'Congratulations! You guessed *{guess}* distribution, which is correct!')
+        st.write(
+            f"Congratulations! You guessed *{guess}* distribution, which is correct!"
+        )
     else:
         reveal = False
         if guess == "":
-            st.write('Please write a guess in the box above!')
+            st.write("Please write a guess in the box above!")
         else:
-            st.write(f'You guessed *{guess}* distribution, which is incorrect :(. Please guess again!')
+            st.write(
+                f"You guessed *{guess}* distribution, which is incorrect :(. Please guess again!"
+            )
 
     # plot distribution
     _fig = plot_distribution(_samples, reveal)
